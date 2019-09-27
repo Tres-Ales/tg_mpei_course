@@ -1,0 +1,33 @@
+//https://leetcode.com/problems/multiply-strings/
+
+class Solution {
+public:
+string multiply(string num1, string num2) {
+if (num1 == "0" || num2 == "0") return "0";
+int len1 = num1.size();
+int len2 = num2.size();
+int len = len1+len2;
+string ans(len, '0');
+
+for (int m=len-2; m>=0; m--) {
+int sum = 0;
+for (int i=len1-1, j=m-i; i>=0&&j<len2; i--, j++) {
+if (j < 0) continue;
+sum += (num1[i]-'0')*(num2[j]-'0');
+}
+int n = 0;
+int carry = 0;
+while (sum > 0 || carry > 0) {
+int val1 = sum%10;
+sum /= 10;
+int val2 = ans[m+1-n]-'0';
+ans[m+1-n] = (val1+val2+carry)%10+'0';
+carry = (val1+val2+carry)/10;
+n++;
+}
+}
+for (int i=0; i<ans.size(); i++)
+if (ans[i] != '0') return ans.substr(i);
+return ans;
+}
+};
