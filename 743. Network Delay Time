@@ -1,0 +1,48 @@
+//https://leetcode.com/problems/network-delay-time/
+
+class Solution {
+public:
+    int networkDelayTime(vector<vector<int>>& times, int N, int K)
+    {
+        if (times.empty () || K > N)
+            return -1;
+        
+        typedef pair <int, int> edge;
+        typedef vector <vector<edge>> graph;
+        
+        graph grph (N+1);
+        for (auto &time : times)
+            grph [time [0]].push_back (edge (time [1], time [2]));
+        
+        typedef pair <int, int> qelmt;
+        priority_queue <qelmt, vector <qelmt>, greater <qelmt>> minq;
+        minq.push (qelmt (0, K));
+        
+        vector <int> dist (N+1, INT_MAX);
+             
+    
+        while (!minq.empty ())
+        {
+            qelmt curqelmt = minq.top ();
+            minq.pop ();
+
+            int disttocurnode = curqelmt.first;
+            int curnode = curqelmt.second;
+        
+            if (dist[curnode] != INT_MAX)
+                continue;
+            dist [curnode] = disttocurnode;
+           
+            for (auto &edg : grph[curnode])
+            {
+                int neighbor = edg.first;
+                int disttoneighbor = disttocurnode + edg.second;
+                minq.push (qelmt (disttoneighbor, neighbor));
+            }
+        }
+            
+        int ret = *max_element (dist.begin ()+1, dist.end ());
+        return ret == INT_MAX ? -1 : ret;
+      
+    }
+};
